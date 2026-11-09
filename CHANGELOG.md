@@ -9,4 +9,5 @@ adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ### Added
 
+- Added unsupported-claim-flagger utility for flagging answer sentences with unsupported facts, including CLI and comprehensive tests.
 - Initial project structure from the factory utility template.

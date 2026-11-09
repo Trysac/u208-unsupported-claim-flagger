@@ -1,29 +1,14 @@
 # Architecture
 
-## Purpose
+## Overview
 
-`trysac-unsupported-claim-flagger` is a small, dependency-free Python library: Flag answer sentences whose numbers, dates, quotes or proper names do not appear in the supplied context, without needing citations or an LLM
+`unsupported_claim_flagger` is a deterministic fact extraction and literal verification library. It processes each answer sentence, extracts checkable facts (dates, numbers, quotes, names), and verifies each fact against a context, without requiring citations or an LLM judge.
 
-## Shape
+## Design decisions
 
-```text
-caller code --> unsupported_claim_flagger (public API in __init__.py)
-                    |
-                    +-- pure functions, no I/O, no global state
-```
+- **Fact extraction order**: Dates, quotes, numbers, names. Each span is consumed once to prevent double counting.
+- **Normalization**: Facts are normalized (e.g., dates to ISO format, numbers stripped of commas and trailing decimal zeros, quotes whitespace-collapsed) to enable literal matching.
+- **Support criteria**: A fact is supported if its normalized value appears in the context (for dates/numbers), as a substring for quotes (whitespace-collapsed), or with word boundaries for names (case-sensitive).
+- **Determinism**: No randomness or external services; all operations are pure functions on strings.
 
-- **Public API**: the names listed in `__all__` of `src/unsupported_claim_flagger/__init__.py`. Anything else is
-  internal and may change without a major version.
-- **Errors**: invalid input raises built-in exceptions (`ValueError`, `TypeError`) with a clear
-  message; the library never prints or exits.
-- **Side effects**: none. If a feature needs I/O, isolate it in its own module behind a small
-  interface and record the choice in an ADR.
-
-## Quality contract
-
-`scripts/check.py` is the single definition of the gates; `fabrica.json` tells the factory and CI
-how to run it. See [TESTING.md](TESTING.md).
-
-## Decisions
-
-Architecture decisions are recorded in [decisions/](decisions/) as numbered ADRs.
+See [docs/decisions/](decisions/) for recorded ADRs.

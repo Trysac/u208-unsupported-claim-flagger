@@ -19,6 +19,9 @@ classifiers = [
 ]
 dependencies = []
 
+[project.scripts]
+unsupported-claim-flagger = "unsupported_claim_flagger.__main__:main"
+
 [project.urls]
 Homepage = "https://github.com/Trysac/u208-unsupported-claim-flagger"
 Source = "https://github.com/Trysac/u208-unsupported-claim-flagger"
