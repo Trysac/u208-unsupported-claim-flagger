@@ -1,0 +1,16 @@
+# unsupported-claim-flagger
+
+> Flag answer sentences whose numbers, dates, quotes or proper names do not appear in the supplied context, without needing citations or an LLM Python package `trysac-unsupported-claim-flagger`, import name `unsupported_claim_flagger`, MIT licensed,
+> Python >= 3.10, no runtime dependencies.
+
+## Docs
+
+- [README](README.md): problem, install, usage example
+- [AGENTS](AGENTS.md): commands, folder map, conventions, limits
+- [Architecture](docs/ARCHITECTURE.md): shape of the package and its public API
+- [Testing](docs/TESTING.md): how to run and extend the tests
+
+## Optional
+
+- [Stack](docs/STACK.md): tools used and discarded
+- [Changelog](CHANGELOG.md): release history
