@@ -1,29 +1,23 @@
 # Testing
 
-## Running
+Run the test suite with:
 
-```sh
-uv run pytest --cov=unsupported_claim_flagger   # tests with coverage report
-uv run python scripts/check.py      # every gate, as CI and the factory run it
+```bash
+pytest
 ```
 
-## Policy
+## Test structure
 
-- Branch coverage of `src/unsupported_claim_flagger` must stay at or above 80 %; the gate fails below it.
-- Tests exercise the public API (`import unsupported_claim_flagger`) and assert every observable effect:
-  return values, raised exceptions and their messages.
-- Each bug fix starts with a failing test that reproduces it.
-- Tests are deterministic: no network, no wall clock, no dependence on test order.
+All tests are in `tests/test_flagger.py`. The file imports `FlaggerError`, `extract_facts`, `flag`, and `main` from `unsupported_claim_flagger`.
 
-## Tiers
+The test functions are:
 
-- Local tier (every gate run, coverage measured here): unit and property tests, plus conformance on small
-  fixtures kept in the repository.
-- CI tier: conformance that needs an external tool or a download. Mark them `@pytest.mark.conformance`; `scripts/check.py` deselects them locally
-  (unless `FABRICA_CI=1`). The CI `conformance` job sets `FABRICA_CI=1` and runs the full suite. Tools are installed
-  by the optional `ci/conformance-setup.sh` (bash, CI only; verify every download against a pinned SHA-256), and
-  tagged tests skip cleanly when their tool is missing.
-
-## Layout
-
-`tests/test_<module>.py` mirrors each public module. Shared fixtures go in `tests/conftest.py`.
+- `test_acceptance_supported_number_percent`: checks a supported percent and number against context.
+- `test_acceptance_unsupported_percent`: checks an unsupported percent and the `missing` value.
+- `test_acceptance_extract_facts_numbers`: checks number extraction next to units and inside `COVID-19`.
+- `test_acceptance_extract_facts_commas_and_decimals`: checks `1,000,000` and `10.0` normalization.
+- `test_acceptance_dates_supported_both_formats`: checks ISO dates against `9 November 2026` and `November 9, 2026` context formats.
+- `test_acceptance_quotes_supported_and_unsupported`: checks whitespace-collapsed quote support and missing quote text.
+- `test_acceptance_names_supported_and_unsupported`: checks name support, an unsupported name, and that sentence-initial `The` is not a name fact.
+- `test_acceptance_no_checkable_facts_and_ratio`: checks `no_checkable_facts`, the supported ratio calculation, and `input_too_large` at the character limit.
+- `test_acceptance_cli`: runs the module with `--context`, checks JSON output and exit codes, and checks exit code 2 for a missing file.
